@@ -1,180 +1,324 @@
-body{
+let currentPage = 0;
 
-margin:0;
 
-background:#75cfff;
+let pages = [
+{
+    background:"",
+    diary:"",
+    stickers:[]
+}
+];
 
-font-family:"Pixelify Sans",sans-serif;
+
+
+// 上传背景
+
+function uploadBackground(){
+
+let input=document.createElement("input");
+
+input.type="file";
+
+input.accept="image/*";
+
+
+input.onchange=function(e){
+
+let file=e.target.files[0];
+
+let url=URL.createObjectURL(file);
+
+
+document.getElementById("canvas").style.backgroundImage=
+`url(${url})`;
+
+
+pages[currentPage].background=url;
+
 
 }
 
 
-.window{
+input.click();
+
+}
 
 
-width:900px;
 
-margin:40px auto;
 
-background:
-linear-gradient(
-135deg,
-#dff7ff,
-#7edcff
+
+// 上传装饰
+
+function uploadSticker(){
+
+
+let input=document.createElement("input");
+
+
+input.type="file";
+
+input.accept="image/*";
+
+
+
+input.onchange=function(e){
+
+
+let file=e.target.files[0];
+
+
+let img=document.createElement("img");
+
+
+img.src=URL.createObjectURL(file);
+
+
+img.className="sticker";
+
+
+
+img.style.left="100px";
+
+img.style.top="100px";
+
+
+
+document.getElementById("canvas")
+.appendChild(img);
+
+
+
+moveSticker(img);
+
+
+
+}
+
+
+input.click();
+
+
+}
+
+
+
+
+// 拖动 + 缩放
+
+function moveSticker(img){
+
+
+
+let offsetX;
+
+let offsetY;
+
+
+
+img.onmousedown=function(e){
+
+
+offsetX=e.offsetX;
+
+offsetY=e.offsetY;
+
+
+
+document.onmousemove=function(event){
+
+
+let canvas=
+document.getElementById("canvas");
+
+
+
+let rect=canvas.getBoundingClientRect();
+
+
+
+img.style.left=
+(event.clientX-rect.left-offsetX)
++"px";
+
+
+
+img.style.top=
+(event.clientY-rect.top-offsetY)
++"px";
+
+
+}
+
+
+
+
+document.onmouseup=function(){
+
+document.onmousemove=null;
+
+
+}
+
+
+
+}
+
+
+
+
+// 鼠标滚轮缩放
+
+img.onwheel=function(e){
+
+
+e.preventDefault();
+
+
+
+let size=
+img.width || 100;
+
+
+
+if(e.deltaY<0){
+
+size+=10;
+
+}
+
+else{
+
+size-=10;
+
+}
+
+
+
+if(size<20){
+
+size=20;
+
+}
+
+
+img.style.width=size+"px";
+
+
+}
+
+
+
+}
+
+
+
+
+// 保存
+
+
+function saveWorld(){
+
+
+
+pages[currentPage].diary=
+document.getElementById("diary").value;
+
+
+
+localStorage.setItem(
+"jealousiiiworld",
+JSON.stringify(pages)
 );
 
 
-border-radius:25px;
 
-padding:25px;
-
-box-shadow:
-0 0 30px white,
-inset 0 0 30px #fff;
-
-
-}
-
-
-h1{
-
-text-align:center;
-
-color:#008cff;
-
-font-size:40px;
-
-text-shadow:
-2px 2px white;
-
-}
-
-
-
-.toolbar{
-
-display:flex;
-
-gap:10px;
-
-justify-content:center;
-
-margin:20px;
+alert("💙 world saved");
 
 
 }
 
 
 
-button{
 
 
-background:white;
+// 翻页
 
-border:3px solid #55bfff;
 
-border-radius:10px;
+function nextPage(){
 
-padding:10px;
 
-font-family:inherit;
+if(currentPage < pages.length-1){
 
-cursor:pointer;
+currentPage++;
+
+loadPage();
+
+}
+
+else{
+
+
+pages.push({
+
+background:"",
+diary:"",
+stickers:[]
+
+});
+
+
+currentPage++;
+
+
+loadPage();
+
+
+}
 
 
 }
 
 
 
-#page{
+function prevPage(){
 
 
-height:600px;
+if(currentPage>0){
 
-position:relative;
+currentPage--;
 
-overflow:hidden;
+loadPage();
 
 
-background-repeat:repeat;
-
-border-radius:20px;
-
-border:5px solid white;
+}
 
 
 }
 
 
 
-#diary{
+
+function loadPage(){
 
 
-position:absolute;
-
-left:30px;
-
-top:30px;
-
-width:300px;
-
-height:200px;
-
-background:#ffffffaa;
-
-border:3px dashed #66ccff;
-
-font-family:inherit;
-
-font-size:18px;
-
-
-}
+document.getElementById("page")
+.innerHTML=
+"Page "
++
+String(currentPage+1)
+.padStart(3,"0");
 
 
 
-.sticker{
-
-
-position:absolute;
-
-cursor:move;
-
-user-select:none;
-
-
-}
+document.getElementById("diary")
+.value=
+pages[currentPage].diary || "";
 
 
 
-.message{
-
-
-margin-top:30px;
-
-background:#ffffffaa;
-
-padding:20px;
-
-border-radius:20px;
-
-
-}
-
-
-
-input,textarea{
-
-
-width:90%;
-
-padding:10px;
-
-font-family:inherit;
-
-border-radius:10px;
-
-border:2px solid #88ddff;
+document.getElementById("canvas")
+.style.backgroundImage=
+`url(${pages[currentPage].background})`;
 
 
 }
