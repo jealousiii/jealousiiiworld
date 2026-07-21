@@ -1,268 +1,229 @@
-let currentPage=0;
+*{
 
+box-sizing:border-box;
 
-let pages=[
-{
-bg:"",
-items:[],
-text:""
 }
-];
 
 
+body{
 
-function uploadBackground(){
+margin:0;
 
+height:100vh;
 
-let input=document.createElement("input");
+overflow:hidden;
 
-input.type="file";
-
-
-input.accept="image/*";
-
-
-input.onchange=e=>{
-
-
-let file=e.target.files[0];
-
-let url=URL.createObjectURL(file);
-
-
-document.getElementById("page").style.backgroundImage=
-`url(${url})`;
-
-
-pages[currentPage].bg=url;
+font-family:"Pixelify Sans",sans-serif;
 
 
 }
 
 
-
-input.click();
-
-
-}
+#world{
 
 
+width:900px;
+
+height:750px;
+
+margin:30px auto;
 
 
-function uploadSticker(){
+position:relative;
 
 
-let input=document.createElement("input");
-
-input.type="file";
-
-input.accept="image/*";
+background:#7bdcff;
 
 
-input.onchange=e=>{
+border-radius:25px;
 
 
-let file=e.target.files[0];
+overflow:hidden;
 
 
-let img=document.createElement("img");
+box-shadow:
 
-
-img.src=URL.createObjectURL(file);
-
-
-img.className="sticker";
-
-
-img.style.left="300px";
-
-img.style.top="200px";
-
-
-document.getElementById("page").appendChild(img);
-
-
-
-drag(img);
-
+0 0 30px white;
 
 
 }
 
 
 
+header{
 
-input.click();
+text-align:center;
 
+color:#008cff;
+
+text-shadow:2px 2px white;
+
+}
+
+
+
+h1{
+
+font-size:38px;
+
+margin:15px;
+
+}
+
+
+
+.tools{
+
+position:absolute;
+
+top:20px;
+
+left:20px;
+
+z-index:20;
+
+
+}
+
+
+button{
+
+
+font-family:inherit;
+
+background:white;
+
+border:3px solid #63cfff;
+
+border-radius:12px;
+
+padding:8px;
+
+cursor:pointer;
 
 }
 
 
 
 
-
-function drag(el){
-
-
-let x,y;
+#canvas{
 
 
-el.onmousedown=e=>{
+position:absolute;
+
+top:0;
+
+left:0;
+
+width:100%;
+
+height:100%;
 
 
-x=e.offsetX;
-
-y=e.offsetY;
-
-
-document.onmousemove=m=>{
-
-
-el.style.left=m.pageX-
-document.getElementById("page").offsetLeft-x+"px";
-
-
-el.style.top=m.pageY-
-document.getElementById("page").offsetTop-y+"px";
-
+background-repeat:repeat;
 
 
 }
 
 
 
-document.onmouseup=()=>{
-
-document.onmousemove=null;
-
-}
+#diaryBox{
 
 
-}
+position:absolute;
+
+width:300px;
+
+height:280px;
 
 
-el.onwheel=e=>{
+left:300px;
+
+top:220px;
 
 
-let size=parseFloat(
-getComputedStyle(el).width
-);
+background:#ffffffaa;
 
 
-el.style.width=
-(size+e.deltaY*-0.1)+"px";
+border:4px solid white;
 
 
-}
+border-radius:20px;
 
 
+box-shadow:
 
-}
-
-
-
-
-function saveWorld(){
-
-
-localStorage.setItem(
-"jealousiiiworld",
-JSON.stringify(pages)
-);
-
-
-alert("saved 💙");
+0 0 20px #55cfff;
 
 
 }
 
 
 
-function newPage(){
-
-pages.push({
-bg:"",
-items:[],
-text:""
-});
+.title{
 
 
-currentPage=pages.length-1;
+background:#8bdcff;
+
+padding:8px;
+
+text-align:center;
+
+}
 
 
-loadPage();
+
+#diary{
+
+
+width:100%;
+
+height:230px;
+
+
+border:0;
+
+background:transparent;
+
+
+font-family:inherit;
+
+font-size:18px;
+
+padding:15px;
 
 
 }
 
 
 
-function nextPage(){
-
-if(currentPage<pages.length-1){
-
-currentPage++;
-
-loadPage();
-
-}
-
-}
+.sticker{
 
 
+position:absolute;
 
-function prevPage(){
+cursor:move;
 
-if(currentPage>0){
-
-currentPage--;
-
-loadPage();
-
-}
-
-}
-
-
-
-function loadPage(){
-
-
-document.getElementById("pageNumber")
-.innerHTML=
-"Page "+String(currentPage+1).padStart(3,"0");
-
-
-document.getElementById("diary").value=
-pages[currentPage].text;
+max-width:200px;
 
 
 }
 
 
 
-
-function sendMessage(){
-
-
-let name=
-document.getElementById("name").value;
+.pageControl{
 
 
-let msg=
-document.getElementById("message").value;
+position:absolute;
+
+bottom:20px;
+
+left:0;
+
+right:0;
 
 
-
-let div=document.createElement("p");
-
-
-div.innerHTML=
-`💙 ${name}: ${msg}`;
-
-
-document.getElementById("messages")
-.appendChild(div);
+text-align:center;
 
 
 }
