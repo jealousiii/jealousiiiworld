@@ -1,324 +1,229 @@
-let currentPage = 0;
+*{
 
+box-sizing:border-box;
 
-let pages = [
-{
-    background:"",
-    diary:"",
-    stickers:[]
 }
-];
 
 
+body{
 
-// 上传背景
+margin:0;
 
-function uploadBackground(){
+height:100vh;
 
-let input=document.createElement("input");
+overflow:hidden;
 
-input.type="file";
-
-input.accept="image/*";
-
-
-input.onchange=function(e){
-
-let file=e.target.files[0];
-
-let url=URL.createObjectURL(file);
-
-
-document.getElementById("canvas").style.backgroundImage=
-`url(${url})`;
-
-
-pages[currentPage].background=url;
+font-family:"Pixelify Sans",sans-serif;
 
 
 }
 
 
-input.click();
-
-}
+#world{
 
 
+width:900px;
+
+height:750px;
+
+margin:30px auto;
 
 
-
-// 上传装饰
-
-function uploadSticker(){
+position:relative;
 
 
-let input=document.createElement("input");
+background:#7bdcff;
 
 
-input.type="file";
-
-input.accept="image/*";
+border-radius:25px;
 
 
-
-input.onchange=function(e){
-
-
-let file=e.target.files[0];
+overflow:hidden;
 
 
-let img=document.createElement("img");
+box-shadow:
 
-
-img.src=URL.createObjectURL(file);
-
-
-img.className="sticker";
-
-
-
-img.style.left="100px";
-
-img.style.top="100px";
-
-
-
-document.getElementById("canvas")
-.appendChild(img);
-
-
-
-moveSticker(img);
-
-
-
-}
-
-
-input.click();
+0 0 30px white;
 
 
 }
 
 
 
+header{
 
-// 拖动 + 缩放
+text-align:center;
 
-function moveSticker(img){
+color:#008cff;
 
+text-shadow:2px 2px white;
 
-
-let offsetX;
-
-let offsetY;
-
-
-
-img.onmousedown=function(e){
-
-
-offsetX=e.offsetX;
-
-offsetY=e.offsetY;
+}
 
 
 
-document.onmousemove=function(event){
+h1{
 
+font-size:38px;
 
-let canvas=
-document.getElementById("canvas");
+margin:15px;
 
-
-
-let rect=canvas.getBoundingClientRect();
-
-
-
-img.style.left=
-(event.clientX-rect.left-offsetX)
-+"px";
+}
 
 
 
-img.style.top=
-(event.clientY-rect.top-offsetY)
-+"px";
+.tools{
 
+position:absolute;
+
+top:20px;
+
+left:20px;
+
+z-index:20;
+
+
+}
+
+
+button{
+
+
+font-family:inherit;
+
+background:white;
+
+border:3px solid #63cfff;
+
+border-radius:12px;
+
+padding:8px;
+
+cursor:pointer;
 
 }
 
 
 
 
-document.onmouseup=function(){
-
-document.onmousemove=null;
+#canvas{
 
 
-}
+position:absolute;
+
+top:0;
+
+left:0;
+
+width:100%;
+
+height:100%;
 
 
-
-}
-
-
-
-
-// 鼠标滚轮缩放
-
-img.onwheel=function(e){
-
-
-e.preventDefault();
-
-
-
-let size=
-img.width || 100;
-
-
-
-if(e.deltaY<0){
-
-size+=10;
-
-}
-
-else{
-
-size-=10;
-
-}
-
-
-
-if(size<20){
-
-size=20;
-
-}
-
-
-img.style.width=size+"px";
+background-repeat:repeat;
 
 
 }
 
 
 
-}
+#diaryBox{
 
 
+position:absolute;
+
+width:300px;
+
+height:280px;
 
 
-// 保存
+left:300px;
+
+top:220px;
 
 
-function saveWorld(){
+background:#ffffffaa;
 
 
-
-pages[currentPage].diary=
-document.getElementById("diary").value;
+border:4px solid white;
 
 
-
-localStorage.setItem(
-"jealousiiiworld",
-JSON.stringify(pages)
-);
+border-radius:20px;
 
 
+box-shadow:
 
-alert("💙 world saved");
-
-
-}
-
-
-
-
-
-// 翻页
-
-
-function nextPage(){
-
-
-if(currentPage < pages.length-1){
-
-currentPage++;
-
-loadPage();
-
-}
-
-else{
-
-
-pages.push({
-
-background:"",
-diary:"",
-stickers:[]
-
-});
-
-
-currentPage++;
-
-
-loadPage();
-
-
-}
+0 0 20px #55cfff;
 
 
 }
 
 
 
-function prevPage(){
+.title{
 
 
-if(currentPage>0){
+background:#8bdcff;
 
-currentPage--;
+padding:8px;
 
-loadPage();
-
-
-}
-
+text-align:center;
 
 }
 
 
 
-
-function loadPage(){
-
-
-document.getElementById("page")
-.innerHTML=
-"Page "
-+
-String(currentPage+1)
-.padStart(3,"0");
+#diary{
 
 
+width:100%;
 
-document.getElementById("diary")
-.value=
-pages[currentPage].diary || "";
-
+height:230px;
 
 
-document.getElementById("canvas")
-.style.backgroundImage=
-`url(${pages[currentPage].background})`;
+border:0;
+
+background:transparent;
+
+
+font-family:inherit;
+
+font-size:18px;
+
+padding:15px;
+
+
+}
+
+
+
+.sticker{
+
+
+position:absolute;
+
+cursor:move;
+
+max-width:200px;
+
+
+}
+
+
+
+.pageControl{
+
+
+position:absolute;
+
+bottom:20px;
+
+left:0;
+
+right:0;
+
+
+text-align:center;
 
 
 }
