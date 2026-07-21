@@ -1,229 +1,324 @@
-*{
+let currentPage = 0;
 
-box-sizing:border-box;
 
+let pages = [
+{
+    background:"",
+    diary:"",
+    stickers:[]
 }
+];
 
 
-body{
 
-margin:0;
+// 上传背景
 
-height:100vh;
+function uploadBackground(){
 
-overflow:hidden;
+let input=document.createElement("input");
 
-font-family:"Pixelify Sans",sans-serif;
+input.type="file";
 
-
-}
+input.accept="image/*";
 
 
-#world{
+input.onchange=function(e){
+
+let file=e.target.files[0];
+
+let url=URL.createObjectURL(file);
 
 
-width:900px;
-
-height:750px;
-
-margin:30px auto;
+document.getElementById("canvas").style.backgroundImage=
+`url(${url})`;
 
 
-position:relative;
-
-
-background:#7bdcff;
-
-
-border-radius:25px;
-
-
-overflow:hidden;
-
-
-box-shadow:
-
-0 0 30px white;
+pages[currentPage].background=url;
 
 
 }
 
 
-
-header{
-
-text-align:center;
-
-color:#008cff;
-
-text-shadow:2px 2px white;
-
-}
-
-
-
-h1{
-
-font-size:38px;
-
-margin:15px;
-
-}
-
-
-
-.tools{
-
-position:absolute;
-
-top:20px;
-
-left:20px;
-
-z-index:20;
-
-
-}
-
-
-button{
-
-
-font-family:inherit;
-
-background:white;
-
-border:3px solid #63cfff;
-
-border-radius:12px;
-
-padding:8px;
-
-cursor:pointer;
+input.click();
 
 }
 
 
 
 
-#canvas{
+
+// 上传装饰
+
+function uploadSticker(){
 
 
-position:absolute;
-
-top:0;
-
-left:0;
-
-width:100%;
-
-height:100%;
+let input=document.createElement("input");
 
 
-background-repeat:repeat;
+input.type="file";
+
+input.accept="image/*";
+
+
+
+input.onchange=function(e){
+
+
+let file=e.target.files[0];
+
+
+let img=document.createElement("img");
+
+
+img.src=URL.createObjectURL(file);
+
+
+img.className="sticker";
+
+
+
+img.style.left="100px";
+
+img.style.top="100px";
+
+
+
+document.getElementById("canvas")
+.appendChild(img);
+
+
+
+moveSticker(img);
+
+
+
+}
+
+
+input.click();
 
 
 }
 
 
 
-#diaryBox{
 
+// 拖动 + 缩放
 
-position:absolute;
-
-width:300px;
-
-height:280px;
-
-
-left:300px;
-
-top:220px;
-
-
-background:#ffffffaa;
-
-
-border:4px solid white;
-
-
-border-radius:20px;
-
-
-box-shadow:
-
-0 0 20px #55cfff;
-
-
-}
+function moveSticker(img){
 
 
 
-.title{
+let offsetX;
 
-
-background:#8bdcff;
-
-padding:8px;
-
-text-align:center;
-
-}
+let offsetY;
 
 
 
-#diary{
+img.onmousedown=function(e){
 
 
-width:100%;
+offsetX=e.offsetX;
 
-height:230px;
-
-
-border:0;
-
-background:transparent;
+offsetY=e.offsetY;
 
 
-font-family:inherit;
 
-font-size:18px;
+document.onmousemove=function(event){
 
-padding:15px;
+
+let canvas=
+document.getElementById("canvas");
+
+
+
+let rect=canvas.getBoundingClientRect();
+
+
+
+img.style.left=
+(event.clientX-rect.left-offsetX)
++"px";
+
+
+
+img.style.top=
+(event.clientY-rect.top-offsetY)
++"px";
 
 
 }
 
 
 
-.sticker{
 
+document.onmouseup=function(){
 
-position:absolute;
-
-cursor:move;
-
-max-width:200px;
+document.onmousemove=null;
 
 
 }
 
 
 
-.pageControl{
+}
 
 
-position:absolute;
-
-bottom:20px;
-
-left:0;
-
-right:0;
 
 
-text-align:center;
+// 鼠标滚轮缩放
+
+img.onwheel=function(e){
+
+
+e.preventDefault();
+
+
+
+let size=
+img.width || 100;
+
+
+
+if(e.deltaY<0){
+
+size+=10;
+
+}
+
+else{
+
+size-=10;
+
+}
+
+
+
+if(size<20){
+
+size=20;
+
+}
+
+
+img.style.width=size+"px";
+
+
+}
+
+
+
+}
+
+
+
+
+// 保存
+
+
+function saveWorld(){
+
+
+
+pages[currentPage].diary=
+document.getElementById("diary").value;
+
+
+
+localStorage.setItem(
+"jealousiiiworld",
+JSON.stringify(pages)
+);
+
+
+
+alert("💙 world saved");
+
+
+}
+
+
+
+
+
+// 翻页
+
+
+function nextPage(){
+
+
+if(currentPage < pages.length-1){
+
+currentPage++;
+
+loadPage();
+
+}
+
+else{
+
+
+pages.push({
+
+background:"",
+diary:"",
+stickers:[]
+
+});
+
+
+currentPage++;
+
+
+loadPage();
+
+
+}
+
+
+}
+
+
+
+function prevPage(){
+
+
+if(currentPage>0){
+
+currentPage--;
+
+loadPage();
+
+
+}
+
+
+}
+
+
+
+
+function loadPage(){
+
+
+document.getElementById("page")
+.innerHTML=
+"Page "
++
+String(currentPage+1)
+.padStart(3,"0");
+
+
+
+document.getElementById("diary")
+.value=
+pages[currentPage].diary || "";
+
+
+
+document.getElementById("canvas")
+.style.backgroundImage=
+`url(${pages[currentPage].background})`;
 
 
 }
