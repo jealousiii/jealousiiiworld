@@ -1,123 +1,268 @@
-<!DOCTYPE html>
-<html>
-<head>
+let currentPage=0;
 
-<meta charset="UTF-8">
 
-<title>jealousiiiworld</title>
+let pages=[
+{
+bg:"",
+items:[],
+text:""
+}
+];
 
-<link rel="stylesheet" href="style.css">
 
-<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans&display=swap" rel="stylesheet">
 
-</head>
+function uploadBackground(){
 
 
-<body>
+let input=document.createElement("input");
 
+input.type="file";
 
-<div class="window">
 
+input.accept="image/*";
 
-<header>
 
-<h1>💙 jealousiiiworld 💙</h1>
+input.onchange=e=>{
 
-<p>✦ my pixel diary world ✦</p>
 
-</header>
+let file=e.target.files[0];
 
+let url=URL.createObjectURL(file);
 
 
-<div class="toolbar">
+document.getElementById("page").style.backgroundImage=
+`url(${url})`;
 
-<button onclick="uploadBackground()">
-🌊 设置背景
-</button>
 
+pages[currentPage].bg=url;
 
-<button onclick="uploadSticker()">
-🦆 添加装饰
-</button>
 
+}
 
-<button onclick="saveWorld()">
-💾 保存世界
-</button>
 
 
-<button onclick="newPage()">
-📖 新日记
-</button>
+input.click();
 
 
-</div>
+}
 
 
 
 
-<div id="page">
+function uploadSticker(){
 
 
-<textarea id="diary"
-placeholder="今天发生了什么呢..."
-></textarea>
+let input=document.createElement("input");
 
+input.type="file";
 
-</div>
+input.accept="image/*";
 
 
+input.onchange=e=>{
 
-<div class="pages">
 
-<button onclick="prevPage()">← previous</button>
+let file=e.target.files[0];
 
-<span id="pageNumber">
-Page 001
-</span>
 
-<button onclick="nextPage()">next →</button>
+let img=document.createElement("img");
 
 
-</div>
+img.src=URL.createObjectURL(file);
 
 
+img.className="sticker";
 
 
+img.style.left="300px";
 
-<section class="message">
+img.style.top="200px";
 
 
-<h2>💌 Message Board</h2>
+document.getElementById("page").appendChild(img);
 
 
-<input id="name"
-placeholder="你的名字">
 
+drag(img);
 
-<textarea id="message"
-placeholder="留下留言..."
-></textarea>
 
 
-<button onclick="sendMessage()">
-send ♡
-</button>
+}
 
 
-<div id="messages"></div>
 
 
-</section>
+input.click();
 
 
+}
 
-</div>
 
 
 
-<script src="script.js"></script>
 
+function drag(el){
 
-</body>
-</html>
+
+let x,y;
+
+
+el.onmousedown=e=>{
+
+
+x=e.offsetX;
+
+y=e.offsetY;
+
+
+document.onmousemove=m=>{
+
+
+el.style.left=m.pageX-
+document.getElementById("page").offsetLeft-x+"px";
+
+
+el.style.top=m.pageY-
+document.getElementById("page").offsetTop-y+"px";
+
+
+
+}
+
+
+
+document.onmouseup=()=>{
+
+document.onmousemove=null;
+
+}
+
+
+}
+
+
+el.onwheel=e=>{
+
+
+let size=parseFloat(
+getComputedStyle(el).width
+);
+
+
+el.style.width=
+(size+e.deltaY*-0.1)+"px";
+
+
+}
+
+
+
+}
+
+
+
+
+function saveWorld(){
+
+
+localStorage.setItem(
+"jealousiiiworld",
+JSON.stringify(pages)
+);
+
+
+alert("saved 💙");
+
+
+}
+
+
+
+function newPage(){
+
+pages.push({
+bg:"",
+items:[],
+text:""
+});
+
+
+currentPage=pages.length-1;
+
+
+loadPage();
+
+
+}
+
+
+
+function nextPage(){
+
+if(currentPage<pages.length-1){
+
+currentPage++;
+
+loadPage();
+
+}
+
+}
+
+
+
+function prevPage(){
+
+if(currentPage>0){
+
+currentPage--;
+
+loadPage();
+
+}
+
+}
+
+
+
+function loadPage(){
+
+
+document.getElementById("pageNumber")
+.innerHTML=
+"Page "+String(currentPage+1).padStart(3,"0");
+
+
+document.getElementById("diary").value=
+pages[currentPage].text;
+
+
+}
+
+
+
+
+function sendMessage(){
+
+
+let name=
+document.getElementById("name").value;
+
+
+let msg=
+document.getElementById("message").value;
+
+
+
+let div=document.createElement("p");
+
+
+div.innerHTML=
+`💙 ${name}: ${msg}`;
+
+
+document.getElementById("messages")
+.appendChild(div);
+
+
+}
