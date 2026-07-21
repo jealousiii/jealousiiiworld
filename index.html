@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="UTF-8">
+
+<title>jealousiiiworld</title>
+
+<link rel="stylesheet" href="style.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans&display=swap" rel="stylesheet">
+
+</head>
+
+
+<body>
+
+
+<div class="window">
+
+
+<header>
+
+<h1>💙 jealousiiiworld 💙</h1>
+
+<p>✦ my pixel diary world ✦</p>
+
+</header>
+
+
+
+<div class="toolbar">
+
+<button onclick="uploadBackground()">
+🌊 设置背景
+</button>
+
+
+<button onclick="uploadSticker()">
+🦆 添加装饰
+</button>
+
+
+<button onclick="saveWorld()">
+💾 保存世界
+</button>
+
+
+<button onclick="newPage()">
+📖 新日记
+</button>
+
+
+</div>
+
+
+
+
+<div id="page">
+
+
+<textarea id="diary"
+placeholder="今天发生了什么呢..."
+></textarea>
+
+
+</div>
+
+
+
+<div class="pages">
+
+<button onclick="prevPage()">← previous</button>
+
+<span id="pageNumber">
+Page 001
+</span>
+
+<button onclick="nextPage()">next →</button>
+
+
+</div>
+
+
+
+
+
+<section class="message">
+
+
+<h2>💌 Message Board</h2>
+
+
+<input id="name"
+placeholder="你的名字">
+
+
+<textarea id="message"
+placeholder="留下留言..."
+></textarea>
+
+
+<button onclick="sendMessage()">
+send ♡
+</button>
+
+
+<div id="messages"></div>
+
+
+</section>
+
+
+
+</div>
+
+
+
+<script src="script.js"></script>
+
+
+</body>
+</html>
